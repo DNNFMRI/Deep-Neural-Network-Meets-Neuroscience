@@ -13,7 +13,19 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, Convolution3D, MaxPooling3D
 from keras.utils import np_utils
+from keras.callbacks import Callback, EarlyStopping
 import getData
+
+class InterruptTraining(Callback):
+     def __init__(self, monitor='acc'):
+        super(Callback, self).__init__()
+        self.monitor = monitor
+        self.monitor_op = np.greater
+     def on_epoch_end(self, epoch, logs={}):
+        current = logs.get(self.monitor)
+        if self.monitor_op(current, 0.8):
+            self.model.stop_training = True
+
 
 def singleSubject_3D(path):
     batch_size = 128
@@ -31,7 +43,7 @@ def singleSubject_3D(path):
     # convolution kernel size
     nb_conv = 3
     # number of test samples
-    nb_test = 3
+    nb_test = 2
 
     # the data, shuffled and split between train and test sets
     (X_train, Y_train), (X_test, Y_test) = getData.load_data(path, nb_test)
@@ -75,9 +87,9 @@ def singleSubject_3D(path):
     model.add(Activation('softmax'))
 
     model.compile(loss='categorical_crossentropy', optimizer='adadelta')
-
+    early_stopping = EarlyStopping(monitor='val_acc', patience=5)
     model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-              show_accuracy=True, verbose=1, validation_data=(X_test, Y_test))
+              show_accuracy=True, verbose=1, validation_data=(X_test, Y_test), callbacks=[early_stopping])
     score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
     print('Test score:', score[0])
     print('Test accuracy:', score[1])
@@ -99,7 +111,7 @@ def singleSubject_2D(path):
     # convolution kernel size
     nb_conv = 3
     # number of test samples
-    nb_test = 3
+    nb_test = 2
 
     # the data, shuffled and split between train and test sets
     (X_train, Y_train), (X_test, Y_test) = getData.load_data(path, nb_test)
@@ -137,9 +149,9 @@ def singleSubject_2D(path):
     model.add(Activation('softmax'))
 
     model.compile(loss='categorical_crossentropy', optimizer='adadelta')
-
+    early_stopping = EarlyStopping(monitor='val_acc', patience=5)
     model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-              show_accuracy=True, verbose=1, validation_data=(X_test, Y_test))
+              show_accuracy=True, verbose=1, validation_data=(X_test, Y_test), callbacks=[early_stopping])
     score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
     print('Test score:', score[0])
     print('Test accuracy:', score[1])
