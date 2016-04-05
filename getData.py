@@ -27,10 +27,10 @@ def load_data(path="data-P1.mat", test_split=0.1, seed= 42, nb_test = 3):
 
     # X = X.reshape(nb_data,1,dimx,dimy,dimz)
 
-    # np.random.seed(seed)
-    # np.random.shuffle(X)
-    # np.random.seed(seed)
-    # np.random.shuffle(labels)
+    np.random.seed(seed)
+    np.random.shuffle(X)
+    np.random.seed(seed)
+    np.random.shuffle(labels)
 
     # X_train = X[:int(len(X) * (1 - test_split))]
     # y_train = labels[:int(len(X) * (1 - test_split))]
@@ -94,4 +94,29 @@ def load_dataCV_subject(idx_CV=0):
 
     return (X_train, y_train), (X_test, Y_test)
 
-load_dataCV_subject(1)
+def load_dataAll(path="data-P1.mat"):
+    data = loadmat(path)
+
+    Xorigin = data['XSeq']
+
+    Yorigin = data['YSeq']
+
+    nb_data = 360
+    dimx = 51
+    dimy = 61
+    dimz = 23
+
+    X = np.empty([nb_data,dimx,dimy,dimz])
+
+    labels = np.empty([nb_data],dtype = int)
+
+    for idx in range(0,nb_data):
+        X[idx] = Xorigin[idx][0].copy()
+        labels[idx] = Yorigin[idx][0][0][0] - 2
+
+    Xorigin = None
+    Yorigin = None
+
+    return X, labels
+
+# load_dataCV_subject(1)

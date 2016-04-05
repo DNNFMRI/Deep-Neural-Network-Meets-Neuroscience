@@ -116,9 +116,9 @@ def singleSubject_2D(path):
     # the data, shuffled and split between train and test sets
     (X_train, Y_train), (X_test, Y_test) = getData.load_data(path, nb_test)
 
-
+    print()
     print("data: " + path)
-    print(X_test.shape)
+    # print(X_test.shape)
     X_train = X_train.astype('float32')
     X_test = X_test.astype('float32')
 
