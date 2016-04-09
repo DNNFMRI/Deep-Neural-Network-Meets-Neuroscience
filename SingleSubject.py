@@ -30,7 +30,7 @@ class InterruptTraining(Callback):
 def singleSubject_3D(path):
     batch_size = 128
     nb_classes = 12
-    nb_epoch = 32
+    nb_epoch = 16
 
     # input image dimensions
     dimx = 51
