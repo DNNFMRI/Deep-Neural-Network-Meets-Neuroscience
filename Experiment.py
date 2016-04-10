@@ -1,7 +1,7 @@
 __author__ = 'Freddie'
 import CrossValidation as CV
-import theano
+#import theano
 #CV.CV_onsub()
-theano.config.openmp = True
+#theano.config.openmp = True
 
 CV.CV_2D_1()

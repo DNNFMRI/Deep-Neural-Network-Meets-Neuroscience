@@ -14,7 +14,10 @@ from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, Convolution3D, MaxPooling3D
 from keras.utils import np_utils
 import getData
+import theano
+
 def CV_2D_1():
+    theano.config.openmp = True
     batch_size = 128
     nb_classes = 12
     nb_epoch = 12
@@ -96,7 +99,7 @@ def CV_2D_1():
     print('Average Test accuracy:', testaccuracy/9)
 
 def CV_2D_onsub():
-
+    theano.config.openmp = True
     batch_size = 128
     nb_classes = 12
     nb_epoch = 32
@@ -176,6 +179,7 @@ def CV_2D_onsub():
 
 
 def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
+    theano.config.openmp = True
     print('CV on samples...')
     batch_size = 128
     nb_classes = 12
