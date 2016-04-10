@@ -68,8 +68,6 @@ def CV_2D_1():
     model.add(Dense(nb_classes))
     model.add(Activation('softmax'))
 
-    model.compile(loss='categorical_crossentropy', optimizer='adadelta')
-
     testscore = 0.0
     testaccuracy = 0.0
 
@@ -89,6 +87,7 @@ def CV_2D_1():
         Y_train = np_utils.to_categorical(Y_train, nb_classes)
         Y_test = np_utils.to_categorical(Y_test, nb_classes)
 
+        model.compile(loss='categorical_crossentropy', optimizer='adadelta')
 
         model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
                   show_accuracy=True, verbose=1)
