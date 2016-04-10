@@ -27,11 +27,11 @@ def CV_2D_1():
     dimy = 61
     dimz = 23
     # number of convolutional filters to use
-    nb_filters = 4
+    nb_filters = 32
     # size of pooling area for max pooling
-    nb_pool = 3
+    nb_pool = 2
     # convolution kernel size
-    nb_conv = 5
+    nb_conv = 3
 
     model = Sequential()
 
@@ -40,26 +40,30 @@ def CV_2D_1():
     #                         input_shape=(1, dimx, dimy, dimz)))
 
     model.add(Convolution2D(nb_filters, nb_conv, nb_conv,
-                            border_mode='valid',
+                            border_mode='same',
                             input_shape=(dimx, dimy, dimz), dim_ordering='tf'))
     model.add(Activation('relu'))
+
+    model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
+    # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
+    model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+    model.add(Dropout(0.25))
+
+    # model.add(MaxPooling3D(pool_size=(nb_pool, nb_pool, nb_pool)))
+    model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv))
+    # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
+    model.add(Activation('relu'))
 
     model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv))
     # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
-    # model.add(MaxPooling3D(pool_size=(nb_pool, nb_pool, nb_pool)))
-    model.add(Convolution2D(nb_filters*2*2, nb_conv, nb_conv))
-    # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
-
     model.add(Dropout(0.25))
-    model.add(Flatten())
-    model.add(Dense(64))
-    model.add(Activation('relu'))
 
+    model.add(Flatten())
+    model.add(Dense(512))
+    model.add(Activation('relu'))
     model.add(Dropout(0.5))
     model.add(Dense(nb_classes))
     model.add(Activation('softmax'))
@@ -268,5 +272,5 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
     print('Average Test accuracy:', testaccuracy/nb_CV)
 
 
-CV_onsample("data-P3.mat")
+# CV_onsample("data-P3.mat")
 # CV_onsub()
