@@ -32,48 +32,45 @@ def CV_2D_1():
     nb_pool = 2
     # convolution kernel size
     nb_conv = 3
-
-    model = Sequential()
-
-    # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv,
-    #                         border_mode='valid',
-    #                         input_shape=(1, dimx, dimy, dimz)))
-
-    model.add(Convolution2D(nb_filters, nb_conv, nb_conv,
-                            border_mode='same',
-                            input_shape=(dimx, dimy, dimz), dim_ordering='tf'))
-    model.add(Activation('relu'))
-
-    model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
-    # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
-    model.add(Dropout(0.25))
-
-    # model.add(MaxPooling3D(pool_size=(nb_pool, nb_pool, nb_pool)))
-    model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv))
-    # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
-    model.add(Activation('relu'))
-
-    model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv))
-    # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
-    model.add(Dropout(0.25))
-
-    model.add(Flatten())
-    model.add(Dense(512))
-    model.add(Activation('relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(nb_classes))
-    model.add(Activation('softmax'))
-
-    testscore = 0.0
-    testaccuracy = 0.0
-
-
     for i in range(0,9):
         print('CV round ' + str(i))
+        model = Sequential()
+
+        # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv,
+        #                         border_mode='valid',
+        #                         input_shape=(1, dimx, dimy, dimz)))
+
+        model.add(Convolution2D(nb_filters, nb_conv, nb_conv,
+                                border_mode='same',
+                                input_shape=(dimx, dimy, dimz), dim_ordering='tf'))
+        model.add(Activation('relu'))
+
+        model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
+        # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
+        model.add(Activation('relu'))
+        model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+        model.add(Dropout(0.25))
+
+        # model.add(MaxPooling3D(pool_size=(nb_pool, nb_pool, nb_pool)))
+        model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv))
+        # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
+        model.add(Activation('relu'))
+
+        model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv))
+        # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
+        model.add(Activation('relu'))
+        model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+        model.add(Dropout(0.25))
+
+        model.add(Flatten())
+        model.add(Dense(512))
+        model.add(Activation('relu'))
+        model.add(Dropout(0.5))
+        model.add(Dense(nb_classes))
+        model.add(Activation('softmax'))
+
+        testscore = 0.0
+        testaccuracy = 0.0
         # the data, shuffled and split between train and test sets
         (X_train, Y_train), (X_test, Y_test)= getData.load_dataCV_subject(i)
 
