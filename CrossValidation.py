@@ -32,6 +32,9 @@ def CV_2D_1():
     nb_pool = 2
     # convolution kernel size
     nb_conv = 3
+    testscore = 0.0
+    testaccuracy = 0.0
+        
     for i in range(0,9):
         print('CV round ' + str(i))
         model = Sequential()
@@ -69,8 +72,6 @@ def CV_2D_1():
         model.add(Dense(nb_classes))
         model.add(Activation('softmax'))
 
-        testscore = 0.0
-        testaccuracy = 0.0
         # the data, shuffled and split between train and test sets
         (X_train, Y_train), (X_test, Y_test)= getData.load_dataCV_subject(i)
 
