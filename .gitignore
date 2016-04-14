@@ -1,7 +1,7 @@
 .DS_Store
 *.properties
 *.mat
-
+*.pyc
 .idea/.name
 
 *.iml
