@@ -69,6 +69,10 @@ def CV_2D_1():
         model.add(Dense(512))
         model.add(Activation('relu'))
         model.add(Dropout(0.5))
+        model.add(Dense(64))
+        model.add(Activation('relu'))
+        model.add(Dropout(0.25))
+        
         model.add(Dense(nb_classes))
         model.add(Activation('softmax'))
 
