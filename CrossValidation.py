@@ -91,7 +91,7 @@ def CV_3D_1():
         Y_train = np_utils.to_categorical(Y_train, nb_classes)
         Y_test = np_utils.to_categorical(Y_test, nb_classes)
 
-        model.compile(loss='categorical_crossentropy', optimizer='adadelta')
+        model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=["accuracy"])
 
         model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
                   show_accuracy=True, verbose=1)
