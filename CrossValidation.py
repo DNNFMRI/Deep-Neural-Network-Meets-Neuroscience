@@ -81,8 +81,8 @@ def CV_3D_1():
         # the data, shuffled and split between train and test sets
         (X_train, Y_train), (X_test, Y_test)= getData.load_dataCV_subject(i)
 
-        # X_train = X_train.reshape(X_train.shape[0],1,dimx,dimy,dimz)
-        # X_test = X_test.reshape(X_test.shape[0],1,dimx,dimy,dimz)
+        X_train = X_train.reshape(X_train.shape[0],1,dimx,dimy,dimz)
+        X_test = X_test.reshape(X_test.shape[0],1,dimx,dimy,dimz)
 
         X_train = X_train.astype('float32')
         X_test = X_test.astype('float32')
