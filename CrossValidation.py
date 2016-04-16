@@ -20,7 +20,7 @@ def CV_2D_1():
     theano.config.openmp = True
     batch_size = 128
     nb_classes = 12
-    nb_epoch = 12
+    nb_epoch = 48
 
     # input image dimensions
     dimx = 51
