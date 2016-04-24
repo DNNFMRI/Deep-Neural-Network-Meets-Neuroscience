@@ -60,20 +60,20 @@ def CV_3D_1():
         model.add(Activation('relu'))
 
         # model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv))
-        model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
-        model.add(Activation('relu'))
+        # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
+        # model.add(Activation('relu'))
         model.add(MaxPooling3D(pool_size=(nb_pool, nb_pool, nb_pool)))
-
-        # model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+        #
+        # # model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
         model.add(Dropout(0.25))
 
         model.add(Flatten())
-        model.add(Dense(512))
-        model.add(Activation('relu'))
-        model.add(Dropout(0.5))
         model.add(Dense(64))
         model.add(Activation('relu'))
-        model.add(Dropout(0.25))
+        model.add(Dropout(0.5))
+        # model.add(Dense(64))
+        # model.add(Activation('relu'))
+        # model.add(Dropout(0.25))
 
         model.add(Dense(nb_classes))
         model.add(Activation('softmax'))
@@ -91,7 +91,7 @@ def CV_3D_1():
         Y_train = np_utils.to_categorical(Y_train, nb_classes)
         Y_test = np_utils.to_categorical(Y_test, nb_classes)
 
-        model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=["accuracy"])
+        model.compile(loss='categorical_crossentropy', optimizer='adamax')
 
         model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
                   show_accuracy=True, verbose=1)
