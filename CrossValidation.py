@@ -331,11 +331,10 @@ def CV_2D_onsub():
 
         model.add(Convolution2D(nb_filters, nb_conv, nb_conv,
                                 border_mode='valid',
-                                input_shape=(dimx, dimy, dimz), dim_ordering='tf', W_regularizer
-=l2(0.1)))
+                                input_shape=(dimx, dimy, dimz), dim_ordering='tf'))
 
         model.add(Activation('relu'))
-        model.add(Convolution2D(nb_filters, nb_conv, nb_conv, W_regularizer=l2(0.1)))
+        model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
         # model.add(AveragePooling2D(pool_size=(nb_pool, nb_pool)))
@@ -352,11 +351,11 @@ def CV_2D_onsub():
 
         model.add(Flatten())
 
-        model.add(Dense(128))
+        model.add(Dense(128, W_regularizer=l2(0.1)))
         model.add(Activation('relu'))
         model.add(Dropout(0.5))
 
-        model.add(Dense(nb_classes))
+        model.add(Dense(nb_classes, W_regularizer=l2(0.1)))
         model.add(Activation('softmax'))
 
         sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
@@ -438,11 +437,11 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
         # model.add(Dense(1024))
         # model.add(Activation('relu'))
         # model.add(Dropout(0.5))
-        model.add(Dense(128, W_regularizer=l2(0.1)))
+        model.add(Dense(128))
         model.add(Activation('relu'))
         model.add(Dropout(0.5))
 
-        model.add(Dense(nb_classes, W_regularizer=l2(0.1)))
+        model.add(Dense(nb_classes))
         model.add(Activation('softmax'))
 
         sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
