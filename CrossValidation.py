@@ -11,7 +11,7 @@ np.random.seed(1337)  # for reproducibility
 
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers.convolutional import Convolution2D, MaxPooling2D, Convolution3D, MaxPooling3D
+from keras.layers.convolutional import Convolution2D, MaxPooling2D, Convolution3D, MaxPooling3D, AveragePooling2D
 from keras.utils import np_utils
 import getData
 import theano
@@ -251,9 +251,9 @@ def CV_2D_1():
         model.add(Flatten())
         model.add(Dense(128))
         model.add(Activation('relu'))
-        model.add(Dropout(0.5))
-        model.add(Dense(64))
-        model.add(Activation('relu'))
+        # model.add(Dropout(0.5))
+        # model.add(Dense(64))
+        # model.add(Activation('relu'))
         model.add(Dropout(0.25))
         
         model.add(Dense(nb_classes))
@@ -412,6 +412,7 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
         model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+        # model.add(AveragePooling2D(pool_size=(nb_pool, nb_pool)))
         model.add(Dropout(0.25))
 
         model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv, border_mode='same'))
@@ -419,12 +420,14 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
         model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+        # model.add(AveragePooling2D(pool_size=(nb_pool, nb_pool)))
+
         model.add(Dropout(0.25))
 
         model.add(Flatten())
-        model.add(Dense(1024))
-        model.add(Activation('relu'))
-        model.add(Dropout(0.5))
+        # model.add(Dense(1024))
+        # model.add(Activation('relu'))
+        # model.add(Dropout(0.5))
         model.add(Dense(128))
         model.add(Activation('relu'))
         model.add(Dropout(0.5))
