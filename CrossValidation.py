@@ -351,11 +351,11 @@ def CV_2D_onsub():
 
         model.add(Flatten())
 
-        model.add(Dense(128, W_regularizer=l2(0.01)))
+        model.add(Dense(128))
         model.add(Activation('relu'))
         model.add(Dropout(0.5))
 
-        model.add(Dense(nb_classes, W_regularizer=l2(0.01)))
+        model.add(Dense(nb_classes))
         model.add(Activation('softmax'))
 
         sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
@@ -477,6 +477,8 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
 
 
 # CV_onsample("data-P3.mat")
-CV_2D_onsub()
+# CV_2D_onsub()
 
-
+for i in range(1,10):
+    path = "data-P" + str(i) + ".mat"
+    CV_onsample(path)
