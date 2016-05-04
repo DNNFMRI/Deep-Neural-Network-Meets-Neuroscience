@@ -351,11 +351,11 @@ def CV_2D_onsub():
 
         model.add(Flatten())
 
-        model.add(Dense(128, W_regularizer=l2(0.1)))
+        model.add(Dense(128, W_regularizer=l2(0.01)))
         model.add(Activation('relu'))
         model.add(Dropout(0.5))
 
-        model.add(Dense(nb_classes, W_regularizer=l2(0.1)))
+        model.add(Dense(nb_classes, W_regularizer=l2(0.01)))
         model.add(Activation('softmax'))
 
         sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
