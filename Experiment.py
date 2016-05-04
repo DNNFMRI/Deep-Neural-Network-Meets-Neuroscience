@@ -5,3 +5,5 @@ import CrossValidation as CV
 #theano.config.openmp = True
 
 CV.CV_3D_1()
+print
+CV.CV_3D_2()
