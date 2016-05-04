@@ -288,7 +288,7 @@ def CV_2D_1():
 
 def CV_2D_onsub():
     theano.config.openmp = True
-    batch_size = 32
+    batch_size = 64
     nb_classes = 12
     nb_epoch = 100
 
@@ -297,7 +297,7 @@ def CV_2D_onsub():
     dimy = 61
     dimz = 23
     # number of convolutional filters to use
-    nb_filters = 65
+    nb_filters = 32
     # size of pooling area for max pooling
     nb_pool = 2
     # convolution kernel size
