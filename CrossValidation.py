@@ -15,6 +15,8 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D, Convolution3
 from keras.utils import np_utils
 import getData
 import theano
+from keras.optimizers import SGD
+
 
 def CV_3D_1():
     theano.config.openmp = True
@@ -117,7 +119,7 @@ def CV_2D_1():
     dimy = 61
     dimz = 23
     # number of convolutional filters to use
-    nb_filters = 32
+    nb_filters = 16
     # size of pooling area for max pooling
     nb_pool = 2
     # convolution kernel size
@@ -156,7 +158,7 @@ def CV_2D_1():
         model.add(Dropout(0.25))
 
         model.add(Flatten())
-        model.add(Dense(512))
+        model.add(Dense(128))
         model.add(Activation('relu'))
         model.add(Dropout(0.5))
         model.add(Dense(64))
@@ -276,20 +278,20 @@ def CV_2D_onsub():
 def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
     theano.config.openmp = True
     print('CV on samples...')
-    batch_size = 128
+    batch_size = 32
     nb_classes = 12
-    nb_epoch = 32
+    nb_epoch = 50
 
     # input image dimensions
     dimx = 51
     dimy = 61
     dimz = 23
     # number of convolutional filters to use
-    nb_filters = 65
+    nb_filters = 64
     # size of pooling area for max pooling
     nb_pool = 2
     # convolution kernel size
-    nb_conv = 3
+    nb_conv = 4
 
     X, Y = getData.load_dataAll(path)
 
@@ -317,23 +319,31 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
 
         model.add(Activation('relu'))
         model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
-
-        # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
-
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
-        # model.add(MaxPooling3D(pool_size=(nb_pool, nb_pool, nb_pool)))
+        model.add(Dropout(0.25))
 
+        model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv, border_mode='same'))
+        model.add(Activation('relu'))
+        model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv))
+        model.add(Activation('relu'))
+        model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
         model.add(Dropout(0.25))
 
         model.add(Flatten())
+        model.add(Dense(1024))
+        model.add(Activation('relu'))
+        model.add(Dropout(0.5))
         model.add(Dense(128))
         model.add(Activation('relu'))
         model.add(Dropout(0.5))
+
         model.add(Dense(nb_classes))
         model.add(Activation('softmax'))
 
-        model.compile(loss='categorical_crossentropy', optimizer='adadelta')
+        sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+
+        model.compile(loss='categorical_crossentropy', optimizer=sgd)
 
         if i == 0:
             # continue
@@ -363,5 +373,7 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
     print('Average Test accuracy:', testaccuracy/nb_CV)
 
 
-# CV_onsample("data-P3.mat")
+CV_onsample("data-P3.mat")
 # CV_onsub()
+
+CV_2D_1()
