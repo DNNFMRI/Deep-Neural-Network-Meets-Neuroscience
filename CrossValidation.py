@@ -288,9 +288,9 @@ def CV_2D_1():
 
 def CV_2D_onsub():
     theano.config.openmp = True
-    batch_size = 128
+    batch_size = 32
     nb_classes = 12
-    nb_epoch = 32
+    nb_epoch = 100
 
     # input image dimensions
     dimx = 51
@@ -301,7 +301,7 @@ def CV_2D_onsub():
     # size of pooling area for max pooling
     nb_pool = 2
     # convolution kernel size
-    nb_conv = 3
+    nb_conv = 4
 
     testscore = 0.0
     testaccuracy = 0.0
@@ -331,30 +331,40 @@ def CV_2D_onsub():
 
         model.add(Convolution2D(nb_filters, nb_conv, nb_conv,
                                 border_mode='valid',
-                                input_shape=(dimx, dimy, dimz), dim_ordering='tf'))
+                                input_shape=(dimx, dimy, dimz), dim_ordering='tf', W_regularizer
+=l2(0.1)))
 
         model.add(Activation('relu'))
-        model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
-
-        # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv))
-
+        model.add(Convolution2D(nb_filters, nb_conv, nb_conv, W_regularizer=l2(0.1)))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
-        # model.add(MaxPooling3D(pool_size=(nb_pool, nb_pool, nb_pool)))
-
+        # model.add(AveragePooling2D(pool_size=(nb_pool, nb_pool)))
         model.add(Dropout(0.25))
 
+        # model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv, W_regularizer=l2(0.1)))
+        # model.add(Activation('relu'))
+        # model.add(Convolution2D(nb_filters*2, nb_conv, nb_conv, W_regularizer=l2(0.1)))
+        # model.add(Activation('relu'))
+        # model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+        # # model.add(AveragePooling2D(pool_size=(nb_pool, nb_pool)))
+        #
+        # model.add(Dropout(0.25))
+
         model.add(Flatten())
+
         model.add(Dense(128))
         model.add(Activation('relu'))
         model.add(Dropout(0.5))
+
         model.add(Dense(nb_classes))
         model.add(Activation('softmax'))
 
-        model.compile(loss='categorical_crossentropy', optimizer='adadelta')
+        sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+
+        model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=["accuracy"])
 
         model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-                  show_accuracy=True, verbose=1, validation_data=(X_test, Y_test))
+                  verbose=1, validation_data=(X_test, Y_test))
         score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
         print('Test score in CV ' + str(i) + ':', score[0])
         print('Test accuracy in CV ' + str(i)  + ':', score[1])
@@ -456,7 +466,7 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
             X_train = np.concatenate((X[: i*nb_test], X[(i+1)*nb_test: ]))
             Y_train = np.concatenate((Y[: i*nb_test], Y[(i+1)*nb_test: ]))
         model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-                  show_accuracy=True, verbose=1, validation_data=(X_test, Y_test))
+                  verbose=1, validation_data=(X_test, Y_test))
         score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
         print('Test score in CV round ' + str(i) + ':', score[0])
         print('Test accuracy in CV round ' + str(i)  + ':', score[1])
@@ -467,7 +477,7 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
     print('Average Test accuracy:', testaccuracy/nb_CV)
 
 
-CV_onsample("data-P3.mat")
-# CV_onsub()
+# CV_onsample("data-P3.mat")
+CV_2D_onsub()
 
-CV_2D_1()
+
