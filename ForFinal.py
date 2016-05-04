@@ -131,7 +131,7 @@ def CV_onsample_new(path="data-P2.mat", test_split=0.1, nb_test = 12):
     dimy = 61
     dimz = 23
     # number of convolutional filters to use
-    nb_filters = 64
+    nb_filters = 32
     # size of pooling area for max pooling
     nb_pool = 2
     # convolution kernel size
