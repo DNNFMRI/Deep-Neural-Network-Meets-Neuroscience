@@ -369,17 +369,18 @@ def CV_2D_onsub():
 
         sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 
+        model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=["accuracy"])
+
         def scheduler(epoch):
             if epoch == 100:
-               model.lr.set_value(0.001)
-            return model.lr.get_value()
+               model.optimizer.lr.set_value(0.001)
+               return 0.001
+            return 0.01
 
         change_lr = LearningRateScheduler(scheduler)
 
-        model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=["accuracy"])
-
         model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-                  verbose=1, validation_data=(X_test, Y_test), callbacks=[chage_lr])
+                  verbose=1, validation_data=(X_test, Y_test), callbacks=[change_lr])
         score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
         print('Test score in CV ' + str(i) + ':', score[0])
         print('Test accuracy in CV ' + str(i)  + ':', score[1])
@@ -493,8 +494,8 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
 
 
 # CV_onsample("data-P3.mat")
-# CV_2D_onsub()
+CV_2D_onsub()
 
-for i in range(1,10):
-    path = "data-P" + str(i) + ".mat"
-    CV_onsample(path)
+#for i in range(1,10):
+#    path = "data-P" + str(i) + ".mat"
+#    CV_onsample(path)
