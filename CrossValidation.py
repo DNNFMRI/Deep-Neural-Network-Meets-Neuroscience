@@ -372,7 +372,7 @@ def CV_2D_onsub():
         model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=["accuracy"])
 
         def scheduler(epoch):
-            if epoch == 100:
+            if epoch >= 100:
                model.optimizer.lr.set_value(0.001)
                return 0.001
             return 0.01
