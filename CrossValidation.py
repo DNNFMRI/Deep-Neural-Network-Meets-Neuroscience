@@ -7,6 +7,7 @@ Get to 99.25% test accuracy after 12 epochs (there is still a lot of margin for 
 
 from __future__ import print_function
 import numpy as np
+import keras.backend as K
 np.random.seed(1337)  # for reproducibility
 
 from keras.models import Sequential
@@ -17,6 +18,10 @@ import getData
 import theano
 from keras.optimizers import SGD
 from keras.regularizers import l1, l2
+from keras.layers.advanced_activations import LeakyReLU
+from keras.callbacks import LearningRateScheduler
+
+
 
 def CV_3D_2():
     theano.config.openmp = True
@@ -290,7 +295,7 @@ def CV_2D_onsub():
     theano.config.openmp = True
     batch_size = 64
     nb_classes = 12
-    nb_epoch = 100
+    nb_epoch = 300
 
     # input image dimensions
     dimx = 51
@@ -334,8 +339,12 @@ def CV_2D_onsub():
                                 input_shape=(dimx, dimy, dimz), dim_ordering='tf'))
 
         model.add(Activation('relu'))
+
+
+
         model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
         model.add(Activation('relu'))
+        # model.add(Activation(LeakyReLU(0.3)))
         model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
         # model.add(AveragePooling2D(pool_size=(nb_pool, nb_pool)))
         model.add(Dropout(0.25))
@@ -351,19 +360,26 @@ def CV_2D_onsub():
 
         model.add(Flatten())
 
-        model.add(Dense(128))
+        model.add(Dense(128, W_regularizer=l2(0.01)))
         model.add(Activation('relu'))
         model.add(Dropout(0.5))
 
-        model.add(Dense(nb_classes))
+        model.add(Dense(nb_classes, W_regularizer=l2(0.01)))
         model.add(Activation('softmax'))
 
         sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 
+        def scheduler(epoch):
+            if epoch == 100:
+               model.lr.set_value(0.001)
+            return model.lr.get_value()
+
+        change_lr = LearningRateScheduler(scheduler)
+
         model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=["accuracy"])
 
         model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-                  verbose=1, validation_data=(X_test, Y_test))
+                  verbose=1, validation_data=(X_test, Y_test), callbacks=[chage_lr])
         score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
         print('Test score in CV ' + str(i) + ':', score[0])
         print('Test accuracy in CV ' + str(i)  + ':', score[1])

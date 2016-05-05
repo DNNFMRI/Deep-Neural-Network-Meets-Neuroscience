@@ -122,7 +122,7 @@ def CV_onsample(path="data-P2.mat", test_split=0.1, nb_test = 12):
 def CV_onsample_new(path="data-P2.mat", test_split=0.1, nb_test = 12):
     theano.config.openmp = True
     print('CV on samples...')
-    batch_size = 32
+    batch_size = 64
     nb_classes = 12
     nb_epoch = 100
 
@@ -153,9 +153,9 @@ def CV_onsample_new(path="data-P2.mat", test_split=0.1, nb_test = 12):
     for i in range(0, nb_CV):
         model = Sequential()
 
-        # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv,
-        #                         border_mode='valid',
-        #                         input_shape=(1, dimx, dimy, dimz)))
+         # model.add(Convolution3D(nb_filters, nb_conv, nb_conv, nb_conv,
+         #                        border_mode='valid',
+         #                        input_shape=(1, dimx, dimy, dimz)))
 
         model.add(Convolution2D(nb_filters, nb_conv, nb_conv,
                                 border_mode='valid',
@@ -163,6 +163,7 @@ def CV_onsample_new(path="data-P2.mat", test_split=0.1, nb_test = 12):
 
         model.add(Activation('relu'))
         model.add(Convolution2D(nb_filters, nb_conv, nb_conv, W_regularizer=l2(0.1)))
+
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
         # model.add(AveragePooling2D(pool_size=(nb_pool, nb_pool)))
